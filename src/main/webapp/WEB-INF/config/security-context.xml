@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<!-- enable Method level [vs URL level] authorization This work for APPLICATION 
+		Level scanned components Does NOT recognize WEB level components - for THAT 
+		need to place enable line in Dispatcher-servlet -->
+	<security:global-method-security
+		pre-post-annotations="enabled" />
+	<!-- Use ControllerAdice for Access denied -->
+	<!-- security:http enables security filter mechanism...name space configuration 
+		is activated -->
+	<!-- use-expressions enables URL level authorization -->
+	<security:http use-expressions="true">
+
+		<!-- Need to redirect exception for web authorization -->
+		<security:access-denied-handler
+			error-page="/error-forbidden" />
+
+		<!-- Implemented with Web based URL - Controller "METHOD" level authorization -->
+		<!-- the more specific rules need to come first, followed by the more general 
+			ones. -->
+		<!-- COMmENT out the following to see @Service METHOD level authorization -->
+
+		<security:intercept-url pattern="/listPost"
+			access="permitAll" />
+		<security:intercept-url pattern="/addUser"
+			access="permitAll" />
+		<security:intercept-url pattern="/login"
+			access="permitAll" />
+		<security:intercept-url pattern="/welcome"
+			access="permitAll" />
+			<security:intercept-url pattern="/success"
+			access="permitAll" />
+
+			<security:intercept-url pattern="/fullPost"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_CONTRIBUTOR','ROLE_READER')" />			
+		<security:intercept-url pattern="/editPost"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_CONTRIBUTOR')" />	
+		<security:intercept-url pattern="/newpost"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_CONTRIBUTOR')" />
+		<security:intercept-url pattern="/listUser"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/addComment"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_CONTRIBUTOR','ROLE_READER')" />
+		
+		<security:intercept-url pattern="/welcome"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_CONTRIBUTOR','ROLE_READER')" />
+
+	
+<!-- 		<security:intercept-url pattern="/fullPost" -->
+<!-- 			access="hasRole('ROLE_CONTRIBUTOR')" /> -->
+			
+<!-- 		<security:intercept-url pattern="/editPost" -->
+<!-- 			access="hasRole('ROLE_CONTRIBUTOR')" />	 -->
+<!-- 		<security:intercept-url pattern="/newpost" -->
+<!-- 			access="hasRole('ROLE_CONTRIBUTOR')" /> -->
+<!-- 		<security:intercept-url pattern="/addComment" -->
+<!-- 			access="hasRole('ROLE_CONTRIBUTOR')" /> -->
+<!-- 		<security:intercept-url pattern="/success" -->
+<!-- 			access="hasRole('ROLE_CONTRIBUTOR')" /> -->
+<!-- 		<security:intercept-url pattern="/welcome" -->
+<!-- 			access="hasRole('ROLE_CONTRIBUTOR')" /> -->
+
+	
+<!-- 		<security:intercept-url pattern="/fullPost" -->
+<!-- 			access="hasRole('ROLE_READER')" /> -->
+<!-- 		<security:intercept-url pattern="/addComment" -->
+<!-- 			access="hasRole('ROLE_READER')" /> -->
+<!-- 		<security:intercept-url pattern="/success" -->
+<!-- 			access="hasRole('ROLE_READER')" /> -->
+
+
+
+
+		<security:form-login login-page="/login"
+			login-processing-url="/postLogin" username-parameter="username"
+			password-parameter="password" default-target-url="/listPost"
+			always-use-default-target="true" authentication-failure-url="/loginfailed" />
+		<security:logout logout-success-url="/logout"
+			logout-url="/doLogout" />
+
+		<!-- BY DEFAULT the URL /j_spring_security_logout triggers logout NOTE: 
+			is it JUST a URL naming convention - no mapping is required logout-url= "/doLogout" 
+			REPLACES it -->
+	</security:http>
+
+
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/GGBlog" />
+		<property name="username" value="root" />
+
+		<property name="password" value="root" />
+
+	</bean>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:password-encoder hash="plaintext" />
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				users-by-username-query="select username,password, 'true' 'enabled' from User where username=?"
+
+				authorities-by-username-query="select u.username, r.name from User u inner join Role r on r.id= u.role_id  where  u.username=?" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+</beans>

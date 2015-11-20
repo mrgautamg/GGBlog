@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" 
+	"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	
+	<definition name="baseLayout" template="/WEB-INF/tiles/template/baseLayout.jsp">
+		<put-attribute name="title" value="Sample Title" />
+		<put-attribute name="heading" value="" />
+		<put-attribute name="tagline" value="" />
+ 		<put-attribute name="navigation" value="/WEB-INF/tiles/template/navigation.jsp" />
+ 		
+		<put-attribute name="body" value="" />
+<!-- 		<put-attribute name="footer" value="/WEB-INF/tiles/template/footer.jsp" /> -->
+	</definition>
+
+ 	<definition name="welcome" extends="baseLayout">
+		<put-attribute name="title" value="Welcome" />
+		<put-attribute name="heading" value="General Accouting" />
+		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/welcome.jsp" />
+	</definition>
+	
+	
+	
+
+	
+	
+	<definition name="listUser" extends="baseLayout">
+		<put-attribute name="title" value="Welcome" />
+		<put-attribute name="heading" value="User-Details" />
+		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/listUser.jsp" />
+	</definition>
+	
+	
+	<definition name="addUserForm" extends="baseLayout">
+		<put-attribute name="title" value="Add New User" />
+		<put-attribute name="heading" value="New User" />
+		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/addUserForm.jsp" />
+	</definition>
+	
+	<definition name="newPost" extends="baseLayout">
+		<put-attribute name="title" value="New Post" />
+		<put-attribute name="heading" value="New Post" />
+		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/newPost.jsp" />
+	</definition>
+	
+	<definition name="fullPost" extends="baseLayout">
+		<put-attribute name="title" value="Read Post" />
+		<put-attribute name="heading" value="Read Post" />
+		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/fullPost.jsp" />
+	</definition>
+	
+		<definition name="editPost" extends="baseLayout">
+		<put-attribute name="title" value="edit Post" />
+		<put-attribute name="heading" value="edit Post" />
+		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/editPost.jsp" />
+	</definition>
+	
+	<definition name="allPosts" extends="baseLayout">
+		<put-attribute name="title" value="read Post" />
+		<put-attribute name="heading" value="read Post" />		
+ 		<put-attribute name="body" value="/WEB-INF/jsp/allPosts.jsp" />
+	</definition>
+	
+	<definition name="sucess" extends="baseLayout">
+		<put-attribute name="title" value="Welcome" />
+		<put-attribute name="heading" value=":)" />
+		<put-attribute name="body" value="/WEB-INF/jsp/sucess.jsp" />
+	</definition>
+	
+	
+	 	
+</tiles-definitions>

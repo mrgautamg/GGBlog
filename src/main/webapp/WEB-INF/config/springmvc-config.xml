@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd     
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/jpa 
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+        
+        <jpa:repositories base-package="ea.ggblog.repository" />
+        
+        
+         <bean id="entityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="packagesToScan" value="ea.ggblog.domain" />
+      <property name="jpaVendorAdapter">
+         <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </property>
+      <property name="jpaProperties">
+         <props>
+            <prop key="hibernate.hbm2ddl.auto">update</prop><!-- create-drop -->
+            <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+         </props>
+      </property>
+   </bean>
+ 
+ 
+
+ 
+   <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="entityManager" />
+   </bean>
+        
+  <mvc:annotation-driven  validator="validator"/>
+    <mvc:annotation-driven  />
+	
+	<context:component-scan base-package="ea.ggblog" />
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+        <property name="order" value="2" />
+	</bean>
+
+
+  	<bean id="tilesViewResolver"   class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+        <property name="order" value="-2" />
+	</bean>
+	
+	
+	
+	<bean id= "messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+   		<property name="basename" value="messages"/> 
+	</bean>
+	
+	<mvc:resources  location="/resources/"  mapping="/resource/**"/>
+	
+	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	  <property name="maxUploadSize" value="10240000"/>
+	
+	</bean>
+	
+	
+	
+
+	<!-- Used to handle Cookie or Session locale resolvers AUTOMATICALLY -->
+	
+	<mvc:interceptors>
+ 		<bean class= "org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="language"/>
+	 	</bean>	 	
+ 	</mvc:interceptors>
+     <!-- 		this is the parameter that the interceptor looks for -->	
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en_US"/>
+	</bean>
+
+ 
+
+ 
+ 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+ 
+ 	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles/definitions/tile-definition.xml</value>
+            </list>
+        </property>
+	</bean>
+	
+    
+</beans>
